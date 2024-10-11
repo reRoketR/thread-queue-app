@@ -90,8 +90,10 @@ Program::Program() {
 }
 
 void Program::updateListBox1() {
+    QMutexLocker locker(&mutex);  // Lock the mutex for thread safety
     // Loop through the generatedNumsBuffer and add new numbers to the list box
     while (!generatedNumsBuffer.isEmpty()) {
+
         // Taking the first number from the buffer and add it to the list box
         int num = generatedNumsBuffer.takeFirst();
         listBox1->addItem(QString::number(num));
@@ -106,6 +108,7 @@ void Program::updateListBox2(){
     }
 }
 void Program::updateListBox3() {
+    QMutexLocker locker(&mutex);  // Lock the mutex for thread safety
     // Loop through the generatedNumsBuffer and add new numbers to the list box
     while (!consumedNumsBuffer.isEmpty()) {
         // Take the first number from the buffer and add it to the list box
@@ -130,6 +133,7 @@ void Program::updateUI()
 // sends the number to the queue manager (thread2)
 void Program::addNum(int num)
 {
+    QMutexLocker locker(&mutex);  // Lock the mutex for thread safety
     generatedNumsBuffer.push_back(num);
     thread2->addNumber(num);
 }
@@ -138,6 +142,7 @@ void Program::addNum(int num)
 // It adds the consumed number to the buffer (consumedNumsBuffer)
 void Program::consumeNum(int num)
 {
+    QMutexLocker locker(&mutex);  // Lock the mutex for thread safety
     consumedNumsBuffer.push_back(num);
 }
 
